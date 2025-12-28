@@ -8,11 +8,13 @@ export async function startScene(engine) {
     const cam = new FreeCamera('cam', new Vector3(0, 0, -2), scene);
     cam.attachControl();
 
-    const box = MeshBuilder.CreateBox('box', {size: .5}, scene);
+    //const box = MeshBuilder.CreateBox('box', {size: .5}, scene);
+    const dot = MeshBuilder.CreateSphere('dot', {diameter: .05}, scene);
 
     const xr = await scene.createDefaultXRExperienceAsync({
         uiOptions: {
             sessionMode: 'immersive-ar',
+            referenceSpaceType: 'unbounded',
         },
     });
 
@@ -35,7 +37,10 @@ export async function startScene(engine) {
             const hitTest = fm.enableFeature(WebXRHitTest, "latest");
             if (hitTest) {
                 hitTest.onHitTestResultObservable.add((result) => {
-                    log(result);
+                    // Safety check: ensure result array has elements and transformationMatrix exists
+                    if (result && Array.isArray(result) && result.length > 0 && result[0] && result[0].transformationMatrix) {
+                        result[0].transformationMatrix.decompose(dot.scaling, dot.rotationQuaternion, dot.position);
+                    }
                 });
                 log('Hit test feature enabled');
             }
