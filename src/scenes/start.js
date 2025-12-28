@@ -9,6 +9,12 @@ export async function startScene(engine) {
 
     const box = MeshBuilder.CreateBox('box', {size: .5}, scene);
 
+    await scene.createDefaultXRExperienceAsync({
+        uiOptions: {
+            sessionMode: 'immersive-ar',
+        },
+    });
+
     await scene.whenReadyAsync();
     return scene;
 }
