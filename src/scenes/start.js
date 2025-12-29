@@ -1,4 +1,6 @@
-import {Scene, HemisphericLight, FreeCamera, Vector3, MeshBuilder} from 'babylonjs';
+import {Scene, HemisphericLight, FreeCamera, Vector3, MeshBuilder,
+    WebXRHitTest, WebXRAnchorSystem
+} from 'babylonjs';
 const log = console.log;
 
 export async function startScene(engine) {
@@ -7,18 +9,24 @@ export async function startScene(engine) {
     const cam = new FreeCamera('cam', new Vector3(0, 0, -2), scene);
     cam.attachControl();
 
-    const box = MeshBuilder.CreateBox('box', {size: .5}, scene);
+    //const box = MeshBuilder.CreateBox('box', {size: .5}, scene);
+    const dot = MeshBuilder.CreateSphere('dot', {size: .05}, scene);
 
-    await scene.createDefaultXRExperienceAsync({
+    const xr = await scene.createDefaultXRExperienceAsync({
         uiOptions: {
             sessionMode: 'immersive-ar',
             uiProfile: 'immersive-ar',
         },
     });
 
-    setInterval(() => {
-        log(box.position);
-    }, 1000);
+    const fm = xr.baseExperience.featuresManager;
+    const hitTest = fm.enableFeature(WebXRHitTest, "latest");
+
+    hitTest.onHitTestResultObservable.add( result => {
+        if (result.length) {
+            result[0].transformationMatrix.decompose(dot.scale, dot.rotationQuaternion, dot.position);
+        }
+    });
 
     await scene.whenReadyAsync();
 
