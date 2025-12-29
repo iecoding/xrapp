@@ -14,8 +14,7 @@ export async function startScene(engine) {
 
     const xr = await scene.createDefaultXRExperienceAsync({
         uiOptions: {
-            sessionMode: 'immersive-ar',
-            uiProfile: 'immersive-ar',
+            sessionMode: 'immersive-ar'
         },
     });
 
@@ -24,7 +23,7 @@ export async function startScene(engine) {
 
     hitTest.onHitTestResultObservable.add( result => {
         if (result.length) {
-            result[0].transformationMatrix.decompose(dot.scale, dot.rotationQuaternion, dot.position);
+            result[0].transformationMatrix.decompose(dot.scaling, dot.rotationQuaternion, dot.position);
         }
     });
 
