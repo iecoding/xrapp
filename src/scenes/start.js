@@ -1,4 +1,5 @@
 import {Scene, HemisphericLight, FreeCamera, Vector3, MeshBuilder} from 'babylonjs';
+const log = console.log;
 
 export async function startScene(engine) {
     const scene = new Scene(engine);
@@ -14,6 +15,10 @@ export async function startScene(engine) {
             uiProfile: 'immersive-ar',
         },
     });
+
+    setInterval(() => {
+        log(box.position);
+    }, 1000);
 
     await scene.whenReadyAsync();
 
