@@ -9,6 +9,10 @@ async function main() {
     engine.runRenderLoop(() => {
         scene.render();
     });
+
+    window.addEventListener('resize', () => {
+        engine.resize();
+    });
 }
 
 main();
