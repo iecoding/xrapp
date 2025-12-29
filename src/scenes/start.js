@@ -1,4 +1,4 @@
-import {Scene, HemisphericLight, FreeCamera, Vector3, MeshBuilder,
+import {Scene, HemisphericLight, FreeCamera, Vector3, MeshBuilder, SceneLoader, Scalar,
     WebXRHitTest, WebXRAnchorSystem, PointerEventTypes
 } from 'babylonjs';
 const log = console.log;
@@ -11,6 +11,9 @@ export async function startScene(engine) {
 
     //const box = MeshBuilder.CreateBox('box', {size: .5}, scene);
     const dot = MeshBuilder.CreateSphere('dot', {size: .05}, scene);
+    const { meshes, animationsGroups } = await SceneLoader.ImportMeshAsync("", "./models/", "lady.glb", scene);
+
+    meshes[0].position.x = 2;
 
     const xr = await scene.createDefaultXRExperienceAsync({
         uiOptions: {
@@ -31,7 +34,8 @@ export async function startScene(engine) {
     });
 
     anchorSystem.onAnchorAddedObservable.add(anchor => {
-        anchor.attachedNode = dot.clone();
+        const clone =meshes[0].clone();
+        anchor.attachedNode = clone;
     });
     scene.onPointerObservable.add(event => {
         if(lastHit && anchorSystem) anchorSystem.addAnchorPointUsingHitTestResultAsync(lastHit);        
