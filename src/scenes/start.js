@@ -6,7 +6,14 @@ export async function startScene(engine) {
     const cam = new FreeCamera('cam', new Vector3(0, 0, -2), scene);
     cam.attachControl();
 
-    const box = MeshBuilder.CreateBox('box', {size: 1}, scene);
+    const box = MeshBuilder.CreateBox('box', {size: .5}, scene);
+
+    await scene.createDefaultXRExperienceAsync({
+        uiOptions: {
+            sessionMode: 'immersive-ar',
+            uiProfile: 'immersive-ar',
+        },
+    });
 
     await scene.whenReadyAsync();
 
